@@ -1,1 +1,0 @@
-import"../chunks/DsnmJJEf.js";import"../chunks/DucUE_-P.js";import{t as o,a as r,n}from"../chunks/GXqqpRKF.js";function s(t){n();var e=o("export const prerender = true;");r(t,e)}export{s as component};
