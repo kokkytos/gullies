@@ -1,6 +1,4 @@
 <script>
-  import { onMount } from "svelte";
-
   let year = "";
   let landform = "";
   let result = "";
@@ -19,12 +17,12 @@
     const yearInt = parseInt(trimmed, 10);
 
     if (isNaN(yearInt)) {
-      status = "Year must be an integer";
+      status = "⚠️ Year must be an integer";
       result = "";
       return;
     }
     if (yearInt <= 1985) {
-      status = "Year must be greater than 1985";
+      status = "⚠️ Year must be greater than 1985";
       result = "";
       return;
     }
@@ -46,7 +44,7 @@
     result = res;
     if (res && res !== "Please select a landform") {
       navigator.clipboard.writeText(res);
-      status = `${res} copied to clipboard!`;
+      status = `✅ ${res} copied to clipboard!`;
       setTimeout(() => (status = ""), 2500);
     }
   }
@@ -64,14 +62,14 @@
   }
 </script>
 
-<div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
-  <h1 class="text-xl font-bold">Gully Codes</h1>
+<div class="p-8 max-w-2xl mx-auto bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-xl space-y-8 border border-blue-200">
+  <h1 class="text-3xl font-extrabold text-blue-700 text-center">🌍 Gully Code Generator</h1>
 
   <!-- Year Input -->
   <div>
-    <label>Year Input</label>
+    <label class="block font-semibold text-gray-700 mb-2">Year</label>
     <input
-      class="border p-2 w-full"
+      class="border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 rounded-lg p-3 w-full transition"
       placeholder="Enter Year (e.g. 2020)"
       bind:value={year}
       on:input={updateString}
@@ -80,36 +78,64 @@
 
   <!-- Landform Selection -->
   <div>
-    <label>Select Landform</label>
-    <div class="flex flex-col space-y-2 mt-2">
-      <label><input type="radio" bind:group={landform} value="BADLANDS" on:change={updateString}/> BADLANDS</label>
-      <label><input type="radio" bind:group={landform} value="TERRACES" on:change={updateString}/> TERRACES</label>
-      <label><input type="radio" bind:group={landform} value="GULLY" on:change={updateString}/> GULLY</label>
+    <label class="block font-semibold text-gray-700 mb-2">Select Landform</label>
+    <div class="grid grid-cols-3 gap-3">
+      <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-100 transition">
+        <input type="radio" bind:group={landform} value="BADLANDS" on:change={updateString} class="mr-2" />
+        <span class="font-medium text-blue-700">Badlands</span>
+      </label>
+      <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-100 transition">
+        <input type="radio" bind:group={landform} value="TERRACES" on:change={updateString} class="mr-2" />
+        <span class="font-medium text-green-700">Terraces</span>
+      </label>
+      <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-100 transition">
+        <input type="radio" bind:group={landform} value="GULLY" on:change={updateString} class="mr-2" />
+        <span class="font-medium text-red-700">Gully</span>
+      </label>
     </div>
   </div>
 
   <!-- Gully Options -->
   {#if landform === "GULLY"}
     <div>
-      <label>Gully Options</label>
-      <div class="flex flex-col space-y-2 mt-2">
-        <label><input type="checkbox" checked={gullyOptions.ephemeral} on:change={toggleEphemeral}/> Ephemeral (E)</label>
-        <label><input type="checkbox" checked={gullyOptions.natural} on:change={toggleNatural}/> Possibly Natural (N)</label>
-        <label><input type="checkbox" bind:checked={gullyOptions.outside} on:change={updateString}/> Starts Outside Site (X)</label>
-        <label><input type="checkbox" bind:checked={gullyOptions.large} on:change={updateString}/> Large >10m (L)</label>
-        <label class="text-red-600"><input type="checkbox" bind:checked={gullyOptions.outOfBounds} on:change={updateString}/> Out of bounds (F)</label>
+      <label class="block font-semibold text-gray-700 mb-2">Gully Options</label>
+      <div class="grid grid-cols-2 gap-2">
+        <label class="flex items-center p-2 border rounded-lg hover:bg-red-50 transition">
+          <input type="checkbox" checked={gullyOptions.ephemeral} on:change={toggleEphemeral} class="mr-2" />
+          Ephemeral <span class="ml-1 text-gray-500">(E)</span>
+        </label>
+        <label class="flex items-center p-2 border rounded-lg hover:bg-green-50 transition">
+          <input type="checkbox" checked={gullyOptions.natural} on:change={toggleNatural} class="mr-2" />
+          Possibly Natural <span class="ml-1 text-gray-500">(N)</span>
+        </label>
+        <label class="flex items-center p-2 border rounded-lg hover:bg-yellow-50 transition">
+          <input type="checkbox" bind:checked={gullyOptions.outside} on:change={updateString} class="mr-2" />
+          Starts Outside <span class="ml-1 text-gray-500">(X)</span>
+        </label>
+        <label class="flex items-center p-2 border rounded-lg hover:bg-purple-50 transition">
+          <input type="checkbox" bind:checked={gullyOptions.large} on:change={updateString} class="mr-2" />
+          Large >10m <span class="ml-1 text-gray-500">(L)</span>
+        </label>
+        <label class="flex items-center p-2 border border-red-300 rounded-lg bg-red-50">
+          <input type="checkbox" bind:checked={gullyOptions.outOfBounds} on:change={updateString} class="mr-2" />
+          <span class="text-red-700 font-semibold">Out of Bounds (F)</span>
+        </label>
       </div>
     </div>
   {/if}
 
   <!-- Result -->
   <div>
-    <label>Result</label>
-    <input class="border p-2 w-full font-bold" readonly value={result} />
+    <label class="block font-semibold text-gray-700 mb-2">Result</label>
+    <input
+      class="border-2 border-gray-300 rounded-lg p-3 w-full font-mono text-lg font-bold text-blue-700 bg-gray-50"
+      readonly
+      value={result}
+    />
   </div>
 
   <!-- Status -->
   {#if status}
-    <p class="text-gray-600 text-sm">{status}</p>
+    <p class="text-sm font-medium text-green-600 bg-green-100 p-2 rounded-md">{status}</p>
   {/if}
 </div>
